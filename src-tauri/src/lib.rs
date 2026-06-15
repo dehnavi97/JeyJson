@@ -88,6 +88,11 @@ pub fn run() {
             }
         }))
         .setup(|app| {
+            #[cfg(debug_assertions)]
+            {
+                let window2 = app.get_window("main").unwrap();
+                window2.open_devtools();
+            }
             // Setup block for cold-boots (app is totally closed, user double clicks a file).
             let args: Vec<String> = env::args().collect();
             if args.len() > 1 {

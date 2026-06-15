@@ -7,7 +7,6 @@ JeyJson is a native, modern, and high-performance desktop application designed t
 
 ## 📸 Preview
 ![JeyJson Screenshot](screenshot.png)
-*Replace this with your actual application screenshot once compiled.*
 
 ---
 

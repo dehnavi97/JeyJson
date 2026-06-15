@@ -7,18 +7,16 @@ export default function Titlebar({ theme }: { theme?: 'dark' | 'light' }) {
   useEffect(() => {
     let unlisten: any;
     async function checkMaximize() {
-      if ((window as any).__TAURI__) {
-        try {
-          const { getCurrentWindow } = await import('@tauri-apps/api/window');
-          const appWindow = getCurrentWindow();
+      try {
+        const { getCurrentWindow } = await import('@tauri-apps/api/window');
+        const appWindow = getCurrentWindow();
+        setIsMaximized(await appWindow.isMaximized());
+        
+        unlisten = await appWindow.onResized(async () => {
           setIsMaximized(await appWindow.isMaximized());
-          
-          unlisten = await appWindow.onResized(async () => {
-            setIsMaximized(await appWindow.isMaximized());
-          });
-        } catch(e) {
-          console.warn("Tauri Window API not available");
-        }
+        });
+      } catch(e) {
+        console.warn("Tauri Window API not available");
       }
     }
     checkMaximize();
@@ -28,24 +26,18 @@ export default function Titlebar({ theme }: { theme?: 'dark' | 'light' }) {
   }, []);
 
   const minimize = async () => {
-    if ((window as any).__TAURI__) {
-      const { getCurrentWindow } = await import('@tauri-apps/api/window');
-      getCurrentWindow().minimize();
-    }
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    getCurrentWindow().minimize();
   };
 
   const toggleMaximize = async () => {
-    if ((window as any).__TAURI__) {
-      const { getCurrentWindow } = await import('@tauri-apps/api/window');
-      getCurrentWindow().toggleMaximize();
-    }
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    getCurrentWindow().toggleMaximize();
   };
 
   const close = async () => {
-    if ((window as any).__TAURI__) {
-      const { getCurrentWindow } = await import('@tauri-apps/api/window');
-      getCurrentWindow().close();
-    }
+    const { getCurrentWindow } = await import('@tauri-apps/api/window');
+    getCurrentWindow().close();
   };
 
   return (

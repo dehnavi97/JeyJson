@@ -129,12 +129,8 @@ export default function App() {
     setShowFirstRun(false);
     localStorage.setItem('jeyjson_first_run', 'false');
     try {
-      if ((window as any).__TAURI__) {
-        const { invoke } = await import('@tauri-apps/api/core');
-        await invoke('set_default_handler');
-      } else {
-        console.log("Mock: Set default handler triggered in web mode.");
-      }
+      const { invoke } = await import('@tauri-apps/api/core');
+      await invoke('set_default_handler');
     } catch (e) {
       console.error(e);
     }
@@ -150,25 +146,23 @@ export default function App() {
     let unlisten: any;
 
     async function listenForTauriEvents() {
-      if ((window as any).__TAURI__) {
-        try {
-          const { listen } = await import('@tauri-apps/api/event');
-          const { readTextFile } = await import('@tauri-apps/plugin-fs');
+      try {
+        const { listen } = await import('@tauri-apps/api/event');
+        const { readTextFile } = await import('@tauri-apps/plugin-fs');
 
-          unlisten = await listen('open-file-event', async (event: any) => {
-            const filePath = event.payload as string;
-            try {
-              const content = await readTextFile(filePath);
-              const fileName = filePath.split(/[/\\]/).pop() || 'Opened File';
-              if (addTabRef.current) addTabRef.current(content, fileName, filePath);
-              if (addToHistoryRef.current) addToHistoryRef.current(content);
-            } catch (err) {
-              console.error("Failed to read opened file via Tauri:", err);
-            }
-          });
-        } catch(e) {
-          console.warn('Tauri event listening failed', e);
-        }
+        unlisten = await listen('open-file-event', async (event: any) => {
+          const filePath = event.payload as string;
+          try {
+            const content = await readTextFile(filePath);
+            const fileName = filePath.split(/[/\\]/).pop() || 'Opened File';
+            if (addTabRef.current) addTabRef.current(content, fileName, filePath);
+            if (addToHistoryRef.current) addToHistoryRef.current(content);
+          } catch (err) {
+            console.error("Failed to read opened file via Tauri:", err);
+          }
+        });
+      } catch(e) {
+        console.warn('Tauri event listening failed', e);
       }
     }
 
@@ -182,26 +176,24 @@ export default function App() {
   const saveFile = async () => {
     if (!activeTab) return;
     try {
-      if ((window as any).__TAURI__) {
-        const { writeTextFile } = await import('@tauri-apps/plugin-fs');
-        const { save } = await import('@tauri-apps/plugin-dialog');
-        
-        let targetPath = activeTab.filePath;
-        
-        if (!targetPath) {
-          targetPath = await save({
-            filters: [{
-              name: 'Accepted Formats',
-              extensions: ['json', 'xml', 'yaml', 'yml', 'txt']
-            }]
-          });
-        }
-        
-        if (targetPath) {
-          await writeTextFile(targetPath, activeTab.content);
-          const newName = targetPath.split(/[/\\]/).pop() || activeTab.name;
-          updateActiveTab({ filePath: targetPath, isDirty: false, name: newName });
-        }
+      const { writeTextFile } = await import('@tauri-apps/plugin-fs');
+      const { save } = await import('@tauri-apps/plugin-dialog');
+      
+      let targetPath = activeTab.filePath;
+      
+      if (!targetPath) {
+        targetPath = await save({
+          filters: [{
+            name: 'Accepted Formats',
+            extensions: ['json', 'xml', 'yaml', 'yml', 'txt']
+          }]
+        });
+      }
+      
+      if (targetPath) {
+        await writeTextFile(targetPath, activeTab.content);
+        const newName = targetPath.split(/[/\\]/).pop() || activeTab.name;
+        updateActiveTab({ filePath: targetPath, isDirty: false, name: newName });
       }
     } catch(e) {
       console.error('Failed to save file', e);
@@ -210,24 +202,22 @@ export default function App() {
 
   const openFile = async () => {
     try {
-      if ((window as any).__TAURI__) {
-        const { readTextFile } = await import('@tauri-apps/plugin-fs');
-        const { open } = await import('@tauri-apps/plugin-dialog');
-        
-        const selected = await open({
-          multiple: false,
-          filters: [{
-            name: 'Accepted Formats',
-            extensions: ['json', 'xml', 'yaml', 'yml', 'txt']
-          }]
-        });
-        
-        if (selected && typeof selected === 'string') {
-          const content = await readTextFile(selected);
-          const fileName = selected.split(/[/\\]/).pop() || 'Opened File';
-          addTab(content, fileName, selected);
-          addToHistory(content);
-        }
+      const { readTextFile } = await import('@tauri-apps/plugin-fs');
+      const { open } = await import('@tauri-apps/plugin-dialog');
+      
+      const selected = await open({
+        multiple: false,
+        filters: [{
+          name: 'Accepted Formats',
+          extensions: ['json', 'xml', 'yaml', 'yml', 'txt']
+        }]
+      });
+      
+      if (selected && typeof selected === 'string') {
+        const content = await readTextFile(selected);
+        const fileName = selected.split(/[/\\]/).pop() || 'Opened File';
+        addTab(content, fileName, selected);
+        addToHistory(content);
       }
     } catch(e) {
       console.error('Failed to open file', e);

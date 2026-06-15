@@ -1,14 +1,26 @@
 {
+  "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Default capabilities",
+  "description": "enables the default permissions",
   "windows": [
-    "*"
+    "main"
   ],
   "permissions": [
     "core:default",
     "core:window:default",
+    "core:window:allow-start-dragging",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-close",
+    "core:event:default",
+    "core:webview:default",
+    "core:path:default",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:allow-exists",
+    "dialog:allow-open",
+    "dialog:allow-save",
     "fs:default",
-    "dialog:default",
-    "os:default"
+    "dialog:default"
   ]
 }

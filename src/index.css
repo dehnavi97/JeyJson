@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Fira+Code:wght@400;500;700&family=Source+Code+Pro:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-jetbrains: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-firacode: "Fira Code", ui-monospace, SFMono-Regular, monospace;
+  --font-source: "Source Code Pro", ui-monospace, SFMono-Regular, monospace;
+
+  /* JeyJson Theme Colors */
+  --color-jey-darkest: #0A0A0A;
+  --color-jey-darker: #121212;
+  --color-jey-dark: #1E1E1E;
+  --color-jey-accent: #FFB100;
+  --color-jey-accent-hover: #D99500;
+}
+
+/* Absolute Theme Override & CSS Protection */
+html.dark, html.dark body {
+  background-color: #0A0A0A !important;
+  color: #ffffff !important;
+  color-scheme: dark;
+}
+
+html.light, html.light body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  color-scheme: light;
+}
+
+body {
+  @apply overflow-hidden m-0 p-0;
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: transparent;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* Hide scrollbars for TabBar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Titlebar Drag Region Fix */
+[data-tauri-drag-region] {
+  -webkit-app-region: drag;
+}
+
+[data-tauri-drag-region] * {
+  -webkit-app-region: no-drag;
+}

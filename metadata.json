@@ -1,0 +1,8 @@
+{
+  "name": "JeyJson",
+  "description": "An all-in-one JSON Swiss Army knife for developers with Editor, Diff, API Client, and Format Converters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
